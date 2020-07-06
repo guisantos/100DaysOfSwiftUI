@@ -41,13 +41,15 @@ struct ContentView: View {
                         if usedWords.count == 0 {
                             Text("-")
                         }
-                        ForEach(usedWords, id: \.self) {
-                            Text("\($0) - \($0.count)")
+                        ForEach(usedWords, id: \.self) { word in
+                            Text("\(word) - \(word.count)")
+                            .accessibility(label: Text("Word \(word) worthy \(word.count) points"))
                         }
                     }
                     Section(header: Text("Score by words")) {
                         ForEach(pointsByWords.sorted(by: {$0.points > $1.points}), id: \.word) { points in
                             Text("\(points.word) - \(points.points)")
+                            .accessibility(label: Text("Word \(points.word) with total points of \(points.points)"))
                         }
                     }
                 }
@@ -57,9 +59,10 @@ struct ContentView: View {
                 leading:
                     Button(action: startGame) {
                         Image(systemName: "plus.circle")
-                    },
+                }.accessibility(label: Text("New word")),
                 trailing:
                     Button("Clear", action: clearGame)
+                .accessibility(label: Text("Clear game"))
             )
             .onAppear(perform: startGame)
             .alert(isPresented: $showingError) {
